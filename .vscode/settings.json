@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/02114982-0e4d-4f20-851c-ffbf9e636f51/resourceGroups/e-kart-server/providers/Microsoft.Web/sites/e-kart-server",
+    "appService.deploySubpath": "."
+}
