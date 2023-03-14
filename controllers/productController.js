@@ -30,22 +30,34 @@ export const createProduct = async (req, res, next) => {
       });
 
       if (i === images.length - 1) {
-        for (let j = 0; j < req.body.productDescription.length; j++) {
-          if (req.body.productDescription[j].image) {
-            const result = await cloudinary.v2.uploader.upload(
-              req.body.productDescription[j].image,
-              {
-                folder: `/e-kart/products/${req.body.name}`,
-              }
-            );
+        let newDes = [];
+        let desCounter = req.body.productDescription.length;
 
-            req.body.productDescription[j].image = {
-              public_id: result.public_id,
-              url: result.secure_url,
-            };
+        req.body.productDescription.forEach(async (des) => {
+          if (des.image) {
+            const result = await cloudinary.v2.uploader.upload(des.image, {
+              folder: `/e-kart/products/${req.body.name}`,
+            });
+
+            newDes = [
+              ...newDes,
+              {
+                ...des,
+                image: {
+                  public_id: result.public_id,
+                  url: result.secure_url,
+                },
+              },
+            ];
+          } else {
+            newDes = [...newDes, des];
           }
 
-          if (j === req.body.productDescription.length - 1) {
+          desCounter -= 1;
+
+          if (desCounter === 0) {
+            req.body.productDescription = [...newDes];
+
             req.body.images = imgCloudLinks;
             req.body.user = req.user.id;
 
@@ -56,7 +68,7 @@ export const createProduct = async (req, res, next) => {
               product,
             });
           }
-        }
+        });
       }
     }
   } catch (err) {
@@ -217,8 +229,6 @@ export const getAllProducts_Admin = async (req, res, next) => {
 // update a Product by id
 export const updateProduct = async (req, res, next) => {
   try {
-    console.log("hree, req.body: ", req.body);
-
     let product = await Product.findById(req.params.id);
 
     if (!product) {
