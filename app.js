@@ -5,7 +5,7 @@ import express from "express";
 import { errorMiddleware } from "./middlewares/error.js";
 
 const corsOptions = {
-  origin: true,
+  origin: process.env.ORIGIN,
   methods: ["POST", "PUT", "GET", "DELETE", "OPTIONS", "HEAD"],
   credentials: true,
 };
@@ -21,8 +21,10 @@ import productRouter from "./routes/productRoute.js";
 import userRouter from "./routes/userRoutes.js";
 import orderRouter from "./routes/orderRoutes.js";
 import paymentRouter from "./routes/paymentRoute.js";
+import healthcheckRouter from "./routes/healthcheckRoute.js";
 
 // route use
+app.use("/api/v1/", healthcheckRouter);
 app.use("/api/v1", productRouter);
 app.use("/api/v1", userRouter);
 app.use("/api/v1", paymentRouter);

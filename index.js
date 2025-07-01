@@ -14,7 +14,9 @@ process.on("uncaughtException", (errr) => {
 // console.log(sd)
 
 // config
-dotenv.config({ path: "./config/config.env" });
+dotenv.config({
+  path: "./.env",
+});
 
 const port = process.env.PORT;
 
@@ -28,12 +30,6 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
   secure: true,
 });
-
-// cloudinary.v2.api.create_upload_preset({
-//   name: ,
-//   tag: ,
-//   folder: ,
-// })
 
 const server = app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
